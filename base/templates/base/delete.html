@@ -6,7 +6,7 @@
         {% csrf_token %}
         <p>Are you sure you want to delete <b>{{room.name}}</b>?</p>
         <a href={{request.META.HTTP_REFERER}}>GO back</a>
-        <input type='submit' value='Confirm delete'/>
+        <input type='submit' value='Confirm'/>
     </form>
 
 </div>
