@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q 
 from .models import *
 from .forms import RoomForm
@@ -12,6 +14,32 @@ from .forms import RoomForm
 #     {'id': 2, 'name': 'Learn C++'},
 #     {'id': 3, 'name': 'Learn Java'},
 # ]
+
+def login_page(request):
+    context = {}
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        try:
+            user = User.objects.get(username=username)
+        except:
+            messages.error(request, 'User does not exist')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, 'Username or password does not exist')
+
+    return render(request, 'base/login_register.html', context)
+
+def logout_user(request):
+    logout(request)
+    return redirect('home')
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') else '' 
