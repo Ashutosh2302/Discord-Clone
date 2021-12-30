@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q 
 from .models import *
@@ -17,6 +18,9 @@ from .forms import RoomForm
 
 def login_page(request):
     context = {}
+
+    if request.user.is_authenticated:
+        return redirect('home')
 
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -58,6 +62,8 @@ def room(request, pk):
     context = {'room': room}
     return render(request, 'base/room.html', context)
 
+
+@login_required(login_url='login')
 def create_room(request):
     form = RoomForm()
 
@@ -70,9 +76,13 @@ def create_room(request):
     context = {'form': form}
     return render(request, 'base/room_form.html', context)
 
+
+@login_required(login_url='login')
 def update_room(request, pk):
     room = Room.objects.get(id=pk)
     form = RoomForm(instance=room)
+    if request.user != room.host:
+        return HttpResponse("You don't have permissions to edit this room")
     
     if request.method == 'POST':
         form = RoomForm(request.POST, instance=room)
@@ -84,8 +94,14 @@ def update_room(request, pk):
     context = {'form': form}
     return render(request, 'base/room_form.html', context)
 
+
+@login_required(login_url='login')
 def delete_room(request, pk):
     room = Room.objects.get(id=pk)
+
+    if request.user != room.host:
+        return HttpResponse("You don't have permissions to delete this room")
+
     if request.method == 'POST':
         room.delete()
         return redirect('home')
