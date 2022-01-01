@@ -9,14 +9,6 @@ from .models import *
 from .forms import RoomForm
 # Create your views here.
 
-
-# rooms = [
-
-#     {'id': 1, 'name': 'Learn Python'},
-#     {'id': 2, 'name': 'Learn C++'},
-#     {'id': 3, 'name': 'Learn Java'},
-# ]
-
 def login_page(request):
     page = 'login'
     context = {'page': page}
@@ -125,6 +117,24 @@ def update_room(request, pk):
 
 
 @login_required(login_url='login')
+def update_message(request, pk):
+    room = Message.objects.get(id=pk)
+    form = RoomForm(instance=room)
+    if request.user != room.host:
+        return HttpResponse("You don't have permissions to edit this room")
+    
+    if request.method == 'POST':
+        form = RoomForm(request.POST, instance=room)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+
+  
+    context = {'form': form}
+    return render(request, 'base/room_form.html', context)
+
+
+@login_required(login_url='login')
 def delete_room(request, pk):
     room = Room.objects.get(id=pk)
 
@@ -140,11 +150,10 @@ def delete_room(request, pk):
 @login_required(login_url='login')
 def delete_message(request, pk):
     message = Message.objects.get(id=pk)
-
     if request.user != message.user:
         return HttpResponse("You don't have permissions to delete this room")
 
     if request.method == 'POST':
         message.delete()
-        return redirect('room')
+        return redirect('room', pk=message.room.id)
     return render(request, 'base/delete.html', {'room': message})
