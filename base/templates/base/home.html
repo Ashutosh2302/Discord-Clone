@@ -57,6 +57,15 @@
 
     <div>
         <h3>Recent Activities</h3>
+        <hr>
+        {% for message in room_messages %}
+
+            <small>@{{message.user}}   {{message.created|timesince}}</small>
+            <small>Replied to "{{message.room}}"</small>
+            <p>{{message.body}}</p>
+            <hr>
+
+        {% endfor %}
     </div>
 
 </div>

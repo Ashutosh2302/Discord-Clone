@@ -63,7 +63,10 @@ def home(request):
     )
     topics = Topic.objects.all()
     room_count = rooms.count()
-    context = {'rooms':rooms, 'topics': topics, 'room_count': room_count}
+    room_messages = Message.objects.all()
+
+
+    context = {'rooms':rooms, 'topics': topics, 'room_count': room_count, 'room_messages': room_messages}
     return render(request, 'base/home.html', context)
 
 def room(request, pk):
@@ -87,11 +90,11 @@ def room(request, pk):
 @login_required(login_url='login')
 def create_room(request):
     form = RoomForm()
-
     if request.method == 'POST':
         form = RoomForm(request.POST)
         if form.is_valid():
             form.save()
+
             return redirect('home')
 
     context = {'form': form}
@@ -116,22 +119,22 @@ def update_room(request, pk):
     return render(request, 'base/room_form.html', context)
 
 
-@login_required(login_url='login')
-def update_message(request, pk):
-    room = Message.objects.get(id=pk)
-    form = RoomForm(instance=room)
-    if request.user != room.host:
-        return HttpResponse("You don't have permissions to edit this room")
+# @login_required(login_url='login')
+# def update_message(request, pk):
+#     room = Message.objects.get(id=pk)
+#     form = RoomForm(instance=room)
+#     if request.user != room.host:
+#         return HttpResponse("You don't have permissions to edit this room")
     
-    if request.method == 'POST':
-        form = RoomForm(request.POST, instance=room)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
+#     if request.method == 'POST':
+#         form = RoomForm(request.POST, instance=room)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('home')
 
   
-    context = {'form': form}
-    return render(request, 'base/room_form.html', context)
+#     context = {'form': form}
+#     return render(request, 'base/room_form.html', context)
 
 
 @login_required(login_url='login')
