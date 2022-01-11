@@ -82,23 +82,23 @@ WSGI_APPLICATION = 'studybuddy.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd7i2dhd17t6aqb',
-        'HOST':  'ec2-34-230-198-12.compute-1.amazonaws.com',
-        'PORT': 5432,
-        'USER': 'sxbakfaipbrmzk',
-        'PASSWORD': '47d393179ce3f093c4d0c3eb6d5a5b7355b4fdae00dd3ccc2c9f6f39f24eac7c',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'd7i2dhd17t6aqb',
+#         'HOST':  'ec2-34-230-198-12.compute-1.amazonaws.com',
+#         'PORT': 5432,
+#         'USER': 'sxbakfaipbrmzk',
+#         'PASSWORD': '47d393179ce3f093c4d0c3eb6d5a5b7355b4fdae00dd3ccc2c9f6f39f24eac7c',
+#     }
+# }
 
 
 # Password validation
