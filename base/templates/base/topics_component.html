@@ -9,9 +9,9 @@
 
       {% for topic in topics %}
       <li>
-
+        {% if topic.room_set.all.count > 0 %}
         <a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}} <span>{{topic.room_set.all.count}}</span> </a>
-  
+        {% endif %}
       </li>
       {% endfor %}
      

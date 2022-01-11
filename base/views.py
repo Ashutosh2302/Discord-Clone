@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q 
 from .models import *
-from .forms import RoomForm
+from .forms import RoomForm, UserForm
 # Create your views here.
 
 def login_page(request):
@@ -64,7 +64,6 @@ def home(request):
     topics = Topic.objects.all()
     room_count = rooms.count()
     room_messages = Message.objects.filter(room__topic__name__icontains=q)
-
 
     context = {'rooms':rooms, 'topics': topics, 'room_count': room_count, 'room_messages': room_messages}
     return render(request, 'base/home.html', context)
@@ -178,3 +177,15 @@ def delete_message_home(request, pk):
         return redirect('home')
     return render(request, 'base/delete.html', {'room': message})
 
+@login_required(login_url='login')
+def update_user(request):
+    user = request.user
+    form = UserForm(instance=user)
+
+    if request.method == 'POST':
+        form = UserForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile', pk=user.id)
+
+    return render(request, 'base/update_user.html', {'form': form})
