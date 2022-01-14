@@ -49,6 +49,9 @@ def register_user(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.username = user.username.lower()
+            # if ' ' in user.username:
+            #     user.username.replace(' ', '_')
+            # print(user.username)
             user.save()
             login(request, user)
             return redirect('home')
